@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GameState, PlayerStats } from '../types';
+import { GameState, PlayerStats } from '../types.ts';
 
 interface DashboardProps {
   gameState: GameState;
@@ -40,7 +40,6 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onStartNextCase, onUpg
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 overflow-y-auto custom-scrollbar">
-      {/* Institutional Header */}
       <header className="bg-slate-900 border-b-2 border-audit-gold/50 sticky top-0 z-50 px-6 py-4 shadow-2xl flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-4">
           <div className="bg-audit-gold text-slate-950 p-2 rounded-md font-black text-xl shadow-lg transform -rotate-1">BPK</div>
@@ -64,7 +63,6 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onStartNextCase, onUpg
       </header>
 
       <main className="max-w-6xl mx-auto p-6 md:p-12 space-y-12">
-        {/* Welcome Section */}
         <div className="relative overflow-hidden bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-audit-accent/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
@@ -89,7 +87,6 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onStartNextCase, onUpg
             </div>
         </div>
 
-        {/* Tools Section */}
         <section className="space-y-6">
             <div className="flex items-center space-x-3">
                 <div className="w-2 h-6 bg-audit-gold rounded-full"></div>
@@ -140,7 +137,6 @@ const Dashboard: React.FC<DashboardProps> = ({ gameState, onStartNextCase, onUpg
             </div>
         </section>
 
-        {/* System Logs Footer */}
         <footer className="pt-12 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-6">
                 <button onClick={onResetGame} className="text-slate-600 hover:text-audit-danger text-[9px] font-black uppercase tracking-widest transition-colors flex items-center">

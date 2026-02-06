@@ -1,5 +1,5 @@
 
-import { Case, Verdict, Document, PlayerStats, BankRecord, NPC } from '../types';
+import { Case, Verdict, Document, PlayerStats, BankRecord, NPC } from '../types.ts';
 
 interface ComponentPool {
   subTypes: string[];

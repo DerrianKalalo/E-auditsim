@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LogEntry, Evidence } from '../../types';
+import { LogEntry, Evidence } from '../../types.ts';
 
 interface LogTerminalProps {
   logs: LogEntry[];

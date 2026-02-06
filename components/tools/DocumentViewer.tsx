@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Document, Evidence } from '../../types';
+import { Document, Evidence } from '../../types.ts';
 
 interface DocumentViewerProps {
   documents: Document[];
@@ -18,7 +18,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ documents, forensicsLev
         id: selectedDoc.id,
         sourceType: 'doc',
         description: `Dokumen: ${selectedDoc.title}`,
-        isStrongEvidence: selectedDoc.id.includes('EV') // Sesuai logika generator
+        isStrongEvidence: selectedDoc.id.includes('EV')
       });
     }
   };
@@ -56,7 +56,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ documents, forensicsLev
       
       <div className="flex-1 p-4 md:p-10 overflow-y-auto bg-slate-950 custom-scrollbar font-sans">
         {selectedDoc ? (
-          <div className="max-w-3xl mx-auto bg-white p-8 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-t-[12px] border-audit-gold relative min-h-full">
+          <div className="max-w-3xl mx-auto bg-white p-8 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-t-[12px] border-audit-gold relative min-h-full text-black">
             <div className="absolute top-10 right-10 flex flex-col items-center opacity-10 pointer-events-none rotate-12">
                <div className="border-8 border-audit-navy p-4 rounded-xl text-audit-navy font-black text-4xl uppercase tracking-[0.2em]">BPK RI</div>
                <div className="text-audit-navy font-black text-sm uppercase mt-2">DOKUMEN NEGARA</div>
@@ -74,18 +74,18 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ documents, forensicsLev
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center font-black text-slate-300">LOGO</div>
                 <div>
-                    <h1 className="text-xl font-black leading-none uppercase tracking-tighter text-black">Audit Forensik</h1>
+                    <h1 className="text-xl font-black leading-none uppercase tracking-tighter">Audit Forensik</h1>
                     <p className="text-[8px] font-bold text-black/50 uppercase tracking-[0.4em] mt-1">Sistem Pengawasan Digital</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right text-black">
                  <div className="bg-black text-white px-2 py-0.5 text-[8px] font-mono font-black rounded uppercase tracking-widest mb-1">RAHASIA</div>
                  <p className="text-[9px] font-mono font-bold text-black/40 uppercase">{selectedDoc.id}</p>
               </div>
             </div>
 
-            <div className="mb-8">
-                <h2 className="text-lg font-black text-black uppercase tracking-tight leading-tight">{selectedDoc.title}</h2>
+            <div className="mb-8 text-black">
+                <h2 className="text-lg font-black uppercase tracking-tight leading-tight">{selectedDoc.title}</h2>
             </div>
             
             <div 
