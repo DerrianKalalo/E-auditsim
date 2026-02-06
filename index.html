@@ -32,7 +32,8 @@
       }
 
       window.onerror = (msg, url, line) => {
-        if (typeof msg === 'string' && msg.includes('Unsupported Content-Type "null"')) return;
+        // Abaikan error MIME type transien saat shim sedang booting
+        if (typeof msg === 'string' && msg.includes('Content-Type')) return;
         reportError('RUNTIME', msg + (url ? ' @ ' + url.split('/').pop() : ''));
       };
       
@@ -56,14 +57,7 @@
           if (!response.ok) return response;
           
           const isTS = /\.tsx?($|\?)/.test(url);
-          if (!isTS) {
-            // Fix for Netlify/Local server missing Content-Type for other files
-            if (!response.headers.get('Content-Type')) {
-               const blob = await response.blob();
-               return new Response(blob, { headers: { 'Content-Type': 'application/octet-stream' } });
-            }
-            return response;
-          }
+          if (!isTS) return response;
 
           try {
             const source = await response.text();
@@ -73,19 +67,23 @@
               sourceMaps: 'inline'
             }).code;
 
+            // Selalu kembalikan sebagai application/javascript agar diterima oleh browser
             return new Response(transformed, {
               status: 200,
-              headers: { 'Content-Type': 'application/javascript; charset=utf-8' }
+              headers: { 
+                'Content-Type': 'application/javascript; charset=utf-8',
+                'X-Transpiled-By': 'Babel-Standalone'
+              }
             });
           } catch (err) {
-            console.error('Transpile failed:', url, err);
+            console.error('Babel Transpile Error:', url, err);
             return response;
           }
         }
       };
     </script>
 
-    <!-- Unified Import Map -->
+    <!-- Unified Import Map - Gunakan HANYA importmap-shim -->
     <script type="importmap-shim">
     {
       "imports": {
@@ -102,8 +100,8 @@
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
   }
 }
