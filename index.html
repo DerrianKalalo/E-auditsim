@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -8,100 +7,70 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script>
-      // Global Error Handler - Menangkap error sebelum aplikasi mount
-      window.onerror = function(msg, url, lineNo, columnNo, error) {
-        console.error('SYSTEM_CRITICAL_ERROR:', msg, 'at', url, ':', lineNo);
+      // Global technical error logging
+      function reportError(type, message) {
+        console.error('SYSTEM_FATAL_ERROR [' + type + ']:', message);
         const root = document.getElementById('root');
-        if (root && (root.innerHTML === '' || root.innerHTML.includes('loading'))) {
+        if (root && (root.innerHTML === '' || root.innerHTML.includes('BOOTING'))) {
           root.innerHTML = `
-            <div style="padding: 3rem; color: #f87171; font-family: 'JetBrains Mono', monospace; background: #020617; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
-              <h1 style="font-size: 1.5rem; font-weight: 800; border-left: 4px solid #ef4444; padding-left: 1rem; margin-bottom: 2rem;">BOOT_ERROR: MODULE_INITIALIZATION_FAILED</h1>
-              <div style="background: #0f172a; padding: 1.5rem; border-radius: 1rem; border: 1px solid #1e293b;">
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">Browser gagal memuat modul aplikasi. Ini biasanya karena masalah Tipe MIME atau koneksi CDN.</p>
-                <code style="display: block; color: #fca5a5; font-size: 0.8rem; background: #000; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;">
-                  Message: ${msg}<br>
-                  Source: ${url.split('/').pop()}<br>
-                  Line: ${lineNo}
-                </code>
+            <div style="background:#020617; color:#f87171; padding:2rem; font-family:monospace; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+              <div style="max-width: 600px;">
+                <h1 style="border-bottom:2px solid #ef4444; padding-bottom:1rem; margin-bottom:1.5rem; font-size: 1.2rem;">KATASTROFIK_BOOT: ${type}</h1>
+                <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom:1.5rem;">Gagal menginisialisasi kernel audit. Periksa apakah Netlify melayani .tsx sebagai application/javascript.</p>
+                <div style="background:#000; padding:1rem; border-radius:0.5rem; text-align:left; overflow:auto; font-size:0.75rem; color:#fca5a5; border:1px solid #1e293b;">
+                  ${message}
+                </div>
+                <button onclick="location.reload()" style="margin-top:2rem; background:#3b82f6; color:white; border:none; padding:1rem 2rem; border-radius:0.5rem; cursor:pointer; font-weight:bold; text-transform:uppercase;">Reboot System</button>
               </div>
-              <button onclick="location.reload()" style="margin-top: 2rem; background: #3b82f6; color: white; border: none; padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 800; cursor: pointer; align-self: flex-start; text-transform: uppercase; letter-spacing: 0.1em;">Muat Ulang Sistem</button>
             </div>
           `;
         }
-        return false;
-      };
-
-      // Mock process.env
+      }
+      window.onerror = (msg, url, line) => reportError('RUNTIME', msg + (url ? ' @ ' + url.split('/').pop() : '') + (line ? ':' + line : ''));
+      window.onunhandledrejection = (ev) => reportError('PROMISE', ev.reason);
+      
       window.process = { env: { API_KEY: "" } };
       
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: {
-              sans: ['Plus Jakarta Sans', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            colors: {
-              audit: {
-                gold: '#D4AF37',
-                navy: '#0F172A',
-                accent: '#3B82F6',
-                danger: '#EF4444',
-                success: '#22C55E'
-              }
-            }
+            fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            colors: { audit: { gold: '#D4AF37', navy: '#0F172A', accent: '#3B82F6', danger: '#EF4444', success: '#22C55E' } }
           },
         },
       }
     </script>
     <style>
-      body {
-        background-color: #020617;
-        color: #f1f5f9;
-        margin: 0;
-        overflow-x: hidden;
-      }
+      body { background:#020617; margin:0; }
       #root:empty::after {
-        content: "INITIALIZING_SYSTEM...";
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem;
-        letter-spacing: 0.4em;
-        color: #334155;
+        content: "INITIALIZING_AUDIT_KERNEL...";
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-family: 'JetBrains Mono', monospace; color: #334155; letter-spacing: 0.4em; font-size: 0.7rem;
         animation: pulse 2s infinite;
       }
-      @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
-      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-      .scan-line {
-        height: 2px;
-        background: linear-gradient(to right, transparent, #3B82F6, transparent);
-        animation: scan 3s linear infinite;
-        opacity: 0.5;
-      }
-      @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+      @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
     <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react/": "https://esm.sh/react@19.0.0/",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-        "react-dom/": "https://esm.sh/react-dom@19.0.0/",
-        "@google/genai": "https://esm.sh/@google/genai@1.3.0"
-      }
-    }
-    </script>
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.3.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
   <link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="index.tsx" onerror="reportError('MODULE_LOAD_FAILURE', 'Kernel utama (index.tsx) gagal dimuat oleh browser. Cek Tab Network untuk status Content-Type.')"></script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
