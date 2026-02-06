@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Case, Verdict, AuditPhase, PlayerStats, Evidence } from '../types';
-import DocumentViewer from './tools/DocumentViewer';
-import LogTerminal from './tools/LogTerminal';
-import InterviewPanel from './tools/InterviewPanel';
-import BankForensics from './tools/BankForensics';
-import EvidenceBoard from './tools/EvidenceBoard';
+import { Case, Verdict, AuditPhase, PlayerStats, Evidence } from '../types.ts';
+import DocumentViewer from './tools/DocumentViewer.tsx';
+import LogTerminal from './tools/LogTerminal.tsx';
+import InterviewPanel from './tools/InterviewPanel.tsx';
+import BankForensics from './tools/BankForensics.tsx';
+import EvidenceBoard from './tools/EvidenceBoard.tsx';
 
 interface CaseViewProps {
   caseData: Case;
@@ -25,9 +25,6 @@ const CaseView: React.FC<CaseViewProps> = ({
   const [activeTab, setActiveTab] = useState<'docs' | 'logs' | 'interview' | 'bank' | 'kkp'>('docs');
   const [showToast, setShowToast] = useState(false);
   
-  const phases = [AuditPhase.ENTRY_MEETING, AuditPhase.FIELDWORK, AuditPhase.EXIT_MEETING, AuditPhase.REPORTING];
-  const currentIdx = phases.indexOf(currentPhase);
-
   const handleTagWithFeedback = (ev: Evidence) => {
     onTagEvidence(ev);
     setShowToast(true);
@@ -99,7 +96,6 @@ const CaseView: React.FC<CaseViewProps> = ({
                 <div className="flex-1 overflow-hidden p-2 md:p-4 bg-slate-950 relative">
                     {renderTool()}
                     
-                    {/* Toast Notification */}
                     {showToast && (
                       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-top-4 duration-300">
                         <div className="bg-audit-success text-white px-6 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl flex items-center border-2 border-green-400">

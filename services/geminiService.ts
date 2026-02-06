@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { NPC, Case } from "../types";
+import { NPC, Case } from "../types.ts";
 
 const getClient = () => {
   const apiKey = process.env.API_KEY;
@@ -11,7 +11,7 @@ const getClient = () => {
 export interface InterviewTurn {
   response: string;
   choices: string[];
-  recommendedIndex: number; // Menentukan pilihan mana yang terbaik (0, 1, atau 2)
+  recommendedIndex: number; 
 }
 
 export const generateInterviewResponse = async (
@@ -41,7 +41,7 @@ Output JSON:
 {
   "response": "Text from NPC",
   "choices": ["Choice 1", "Choice 2", "Choice 3"],
-  "recommendedIndex": 1 (Index of the best strategic choice)
+  "recommendedIndex": 1
 }`;
 
   try {

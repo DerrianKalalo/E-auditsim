@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { GameState, INITIAL_GAME_STATE, Verdict, AuditPhase, Evidence } from './types';
-import { CaseGenerator } from './services/CaseGenerator';
-import Dashboard from './components/Dashboard';
-import CaseView from './components/CaseView';
+import { GameState, INITIAL_GAME_STATE, Verdict, AuditPhase, Evidence } from './types.ts';
+import { CaseGenerator } from './services/CaseGenerator.ts';
+import Dashboard from './components/Dashboard.tsx';
+import CaseView from './components/CaseView.tsx';
 
 const STORAGE_KEY = 'e_audit_simulator_v3';
 
@@ -56,12 +56,10 @@ const App: React.FC = () => {
 
     const currentCase = gameState.currentCase;
     
-    // Kompleksitas Baru: Validasi apakah bukti yang dikumpulkan relevan
     const linkedEvidenceInKKP = taggedEvidences.filter(ev => currentCase.linkedEvidenceIds.includes(ev.id));
     const isOpinionCorrect = verdict === currentCase.correctOpinion;
     const isStronglyProven = linkedEvidenceInKKP.length >= currentCase.linkedEvidenceIds.length;
     
-    // Hasil audit benar jika opini benar DAN bukti ditemukan (jika ada fraud)
     const isCorrect = isOpinionCorrect && (verdict === Verdict.WTP || isStronglyProven);
     
     let integrityDelta = 0;
