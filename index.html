@@ -32,7 +32,7 @@
       }
 
       window.onerror = (msg, url, line) => {
-        // Abaikan error MIME type transien saat shim sedang booting
+        // Abaikan error Content-Type transien
         if (typeof msg === 'string' && msg.includes('Content-Type')) return;
         reportError('RUNTIME', msg + (url ? ' @ ' + url.split('/').pop() : ''));
       };
@@ -61,29 +61,33 @@
 
           try {
             const source = await response.text();
+            
+            // Validasi: Jika server mengembalikan HTML (biasanya 404 redirect), jangan teruskan ke Babel
+            if (source.trim().startsWith('<!DOCTYPE') || source.trim().startsWith('<html')) {
+               throw new Error('Server mengembalikan HTML (404) alih-alih file sumber. Pastikan file ' + url.split('/').pop() + ' tersedia.');
+            }
+
             const transformed = Babel.transform(source, {
               presets: ['typescript', 'react'],
               filename: url,
               sourceMaps: 'inline'
             }).code;
 
-            // Selalu kembalikan sebagai application/javascript agar diterima oleh browser
             return new Response(transformed, {
               status: 200,
               headers: { 
-                'Content-Type': 'application/javascript; charset=utf-8',
-                'X-Transpiled-By': 'Babel-Standalone'
+                'Content-Type': 'application/javascript; charset=utf-8'
               }
             });
           } catch (err) {
             console.error('Babel Transpile Error:', url, err);
-            return response;
+            throw new Error(`Gagal memuat ${url.split('/').pop()}: ${err.message}`);
           }
         }
       };
     </script>
 
-    <!-- Unified Import Map - Gunakan HANYA importmap-shim -->
+    <!-- Unified Import Map - HANYA GUNAKAN importmap-shim -->
     <script type="importmap-shim">
     {
       "imports": {
@@ -100,8 +104,8 @@
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.4",
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
   }
 }
