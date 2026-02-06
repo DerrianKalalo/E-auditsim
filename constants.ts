@@ -1,5 +1,5 @@
 
-import { Case, Verdict } from './types';
+import { Case, Verdict } from './types.ts';
 
 export const SCENARIOS: Case[] = [
   {
@@ -44,7 +44,6 @@ export const SCENARIOS: Case[] = [
       { id: 'log-1', timestamp: '2023-10-25 14:00', user: 'SYSTEM', action: 'Penutupan Harian', details: 'Total Diharapkan: $400.00' },
       { id: 'log-2', timestamp: '2023-10-25 14:15', user: 's_sarah', action: 'Manual Override', details: 'Jumlah Kas Dimasukkan: $200.00', flagged: true },
     ],
-    // Fix: Added missing bankRecords property required by Case interface
     bankRecords: [
       { 
         date: '2023-10-25', 
@@ -58,7 +57,7 @@ export const SCENARIOS: Case[] = [
     npc: {
       name: 'Ibu Sarah',
       role: 'Manajer Kantin',
-      avatar: 'https://picsum.photos/id/64/200/200',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sarah',
       personality: 'Keibuan, sedikit tidak teratur, pekerja keras. Gugup dengan teknologi.',
       knowledge: 'Saya mengambil $200 tunai untuk membeli es batu karena mesin es rusak saat makan siang. Kuitansinya hilang tapi saya janji uangnya untuk sekolah!',
       openingLine: "Aduh, apakah ini soal angka-angka itu? Saya tidak terlalu paham dengan mesin komputer itu.",
@@ -67,7 +66,6 @@ export const SCENARIOS: Case[] = [
     findings: ['Selisih Kas', 'Dokumen Pendukung Hilang'],
     correctOpinion: Verdict.WDP,
     explanation: 'Meskipun penggunaan kas tanpa otorisasi adalah pelanggaran, niatnya adalah operasional dan bukan pencurian. Opini WDP tepat untuk menekankan prosedur penanganan kuitansi yang benar.',
-    // Added linkedEvidenceIds to satisfy Case interface
     linkedEvidenceIds: ['log-2', 'doc-2']
   }
 ];

@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { NPC, Case } from '../../types';
-import { generateInterviewResponse, InterviewTurn } from '../../services/geminiService';
+import { NPC, Case } from '../../types.ts';
+import { generateInterviewResponse, InterviewTurn } from '../../services/geminiService.ts';
 
 interface InterviewPanelProps {
   npc: NPC;
@@ -60,7 +60,6 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ npc, currentCase, inter
 
   return (
     <div className="h-full flex flex-col bg-slate-950 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
-      {/* Subject Identity Header */}
       <div className="bg-slate-900 px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-5">
             <div className="relative group">
@@ -91,7 +90,6 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ npc, currentCase, inter
         )}
       </div>
 
-      {/* Transcript Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar scroll-smooth" ref={scrollRef}>
         <div className="text-center opacity-30 py-4">
             <span className="text-[9px] font-black uppercase tracking-[0.5em] text-slate-500">— TRANSKRIP SIDANG DIMULAI —</span>
@@ -114,7 +112,6 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ npc, currentCase, inter
                   }`}
                 >
                   {msg.text}
-                  
                   {interrogationLevel >= 2 && msg.role === 'model' && (
                     <div className="mt-3 pt-3 border-t border-slate-800/50 flex items-start space-x-2">
                         <div className="w-4 h-4 text-audit-gold shrink-0">
@@ -142,7 +139,6 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ npc, currentCase, inter
         )}
       </div>
 
-      {/* Strategic Actions Area */}
       <div className="p-6 bg-slate-900 border-t border-slate-800 shrink-0">
         {!isLoading && choices.length > 0 ? (
           <div className="space-y-4">
@@ -153,7 +149,6 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ npc, currentCase, inter
             <div className="grid grid-cols-1 gap-3">
                 {choices.map((choice, idx) => {
                 const isRecommended = interrogationLevel >= 1 && idx === recommendedIndex;
-                
                 return (
                     <button
                     key={idx}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Evidence } from '../../types';
+import { Evidence } from '../../types.ts';
 
 interface EvidenceBoardProps {
   taggedEvidence: Evidence[];

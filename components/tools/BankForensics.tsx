@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { BankRecord, NPC, Evidence } from '../../types';
+import { BankRecord, NPC, Evidence } from '../../types.ts';
 
 interface BankForensicsProps {
   records: BankRecord[];
