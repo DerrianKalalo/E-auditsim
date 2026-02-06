@@ -1,9 +1,118 @@
-<!doctype html>
-<html>
-<head><link rel="stylesheet" href="/index.css">
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIP-BPK: Simulator Audit Forensik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    
+    <!-- Babel Standalone untuk Transpilasi -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+      // Konfigurasi Global & Error Handling
+      function reportError(type, message) {
+        console.error('SYSTEM_FATAL_ERROR [' + type + ']:', message);
+        const root = document.getElementById('root');
+        if (root) {
+          root.innerHTML = `
+            <div style="background:#020617; color:#f87171; padding:2rem; font-family:monospace; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+              <div style="max-width: 600px;">
+                <h1 style="border-bottom:2px solid #ef4444; padding-bottom:1rem; margin-bottom:1.5rem; font-size: 1.2rem;">KATASTROFIK_BOOT: ${type}</h1>
+                <div style="background:#000; padding:1rem; border-radius:0.5rem; text-align:left; overflow:auto; font-size:0.75rem; color:#fca5a5; border:1px solid #1e293b; margin-bottom:1.5rem;">
+                  ${message}
+                </div>
+                <button onclick="location.reload()" style="background:#3b82f6; color:white; border:none; padding:1rem 2rem; border-radius:0.5rem; cursor:pointer; font-weight:bold; text-transform:uppercase;">Reboot System</button>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      window.onerror = (msg, url, line) => {
+        if (typeof msg === 'string' && msg.includes('Unsupported Content-Type "null"')) return;
+        reportError('RUNTIME', msg + (url ? ' @ ' + url.split('/').pop() : ''));
+      };
+      
+      window.process = { env: { API_KEY: "" } };
+
+      // Tailwind Configuration
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            colors: { audit: { gold: '#D4AF37', navy: '#0F172A', accent: '#3B82F6', danger: '#EF4444', success: '#22C55E' } }
+          },
+        },
+      };
+
+      // ES-Module-Shims Configuration
+      window.esmsInitOptions = {
+        shimMode: true,
+        handleFetch: async (url, options) => {
+          const response = await fetch(url, options);
+          if (!response.ok) return response;
+          
+          const isTS = /\.tsx?($|\?)/.test(url);
+          if (!isTS) {
+            // Fix for Netlify/Local server missing Content-Type for other files
+            if (!response.headers.get('Content-Type')) {
+               const blob = await response.blob();
+               return new Response(blob, { headers: { 'Content-Type': 'application/octet-stream' } });
+            }
+            return response;
+          }
+
+          try {
+            const source = await response.text();
+            const transformed = Babel.transform(source, {
+              presets: ['typescript', 'react'],
+              filename: url,
+              sourceMaps: 'inline'
+            }).code;
+
+            return new Response(transformed, {
+              status: 200,
+              headers: { 'Content-Type': 'application/javascript; charset=utf-8' }
+            });
+          } catch (err) {
+            console.error('Transpile failed:', url, err);
+            return response;
+          }
+        }
+      };
+    </script>
+
+    <!-- Unified Import Map -->
+    <script type="importmap-shim">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom": "https://esm.sh/react-dom@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "@google/genai": "https://esm.sh/@google/genai@1.3.0"
+      }
+    }
+    </script>
+    
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
 </head>
-<body>
-<html lang="
-<script type="module" src="/index.tsx"></script>
+  <body>
+    <div id="root"></div>
+    <script type="module-shim" src="index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>

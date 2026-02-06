@@ -9,22 +9,25 @@ const mountApp = () => {
     return;
   }
   
-  // Clear any existing loading text
-  if (rootElement.innerHTML.includes('LOADING')) {
-    rootElement.innerHTML = '';
-  }
+  // Ensure the container is clean for React
+  rootElement.innerHTML = '';
 
-  const root = createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
+  try {
+    const root = createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+    console.log("System: Audit Kernel Mounted Successfully.");
+  } catch (err) {
+    console.error("Mount Error:", err);
+  }
 };
 
-// Ensure DOM is ready for mounting
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mountApp);
-} else {
+// Start application
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
   mountApp();
+} else {
+  document.addEventListener('DOMContentLoaded', mountApp);
 }
