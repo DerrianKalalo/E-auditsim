@@ -1,0 +1,101 @@
+/* Global Styles & Reset */
+body {
+  background: #020617;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes scale-in-center {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.scale-in-center {
+  animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+/* Forensic Scan Line Effect */
+.scan-line {
+  width: 100%;
+  height: 2px;
+  background: rgba(59, 130, 246, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Document Specific Overrides */
+.document-content table {
+  border: 2px solid #000 !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 20px 0 !important;
+}
+
+.document-content td, .document-content th {
+  border: 1px solid #000 !important;
+  color: #000 !important;
+  padding: 8px !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.document-content th {
+  background-color: #f1f5f9 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+.document-content p, .document-content li, .document-content h3, .document-content h4 {
+  color: #000 !important;
+  margin-bottom: 12px !important;
+}
+
+/* Loading State Overlay */
+#root:empty::after {
+  content: "BOOTING_KERNEL_SYSTEM...";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'JetBrains Mono', monospace;
+  color: #1e293b;
+  letter-spacing: 0.5em;
+  font-size: 0.7rem;
+  animation: pulse 2s infinite;
+}
